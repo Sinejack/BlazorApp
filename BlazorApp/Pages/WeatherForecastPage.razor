@@ -1,0 +1,76 @@
+﻿@page "/weatherForecast"
+
+@using System.Collections.Generic;
+@using BlazorApp.Data
+@using Microsoft.AspNetCore.Components.Web.Extensions.Head;
+@inject WeatherForecastService ForecastService
+
+<Title Value="Weather Forecast"></Title>
+<h1>Weather forecast</h1>
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <p>This component demonstrates fetching data from a service.</p>
+    </div>
+    <div class="col-md-12">
+        <button type="button" class="btn btn-outline-info" @onclick="() => GetForecastDataAsync()">Refresh data</button>
+    </div>
+</div>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table" id="WeatherTable">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+                <th>Img</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                    @if (forecast.Summary.Equals("Sunny"))
+                    {
+                        <td>
+                            <img src="/Images/sunny.png" width="20" height="20" />
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<WeatherForecast> forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+    }
+
+    /// <summary>
+    /// Get weather forecast data from service.
+    /// </summary>
+    /// <returns>Assigns the data retrieved to forecasts.</returns>
+    public async Task GetForecastDataAsync()
+    {
+        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+    }
+}
