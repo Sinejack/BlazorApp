@@ -1,19 +1,12 @@
 using BlazorApp.Data;
+using BlazorApp.EntityFramework;
+using BlazorApp.Services;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace BlazorApp
 {
@@ -32,7 +25,13 @@ namespace BlazorApp
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
+            services.AddControllers();
+
+            // Add database context
+            services.AddDbContext<AppDbContext>(options
+                => options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
+
+            SetupAppServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,6 +60,12 @@ namespace BlazorApp
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+        }
+
+        private void SetupAppServices(IServiceCollection services)
+        {
+            services.AddSingleton<WeatherForecastService>();
+            services.AddSingleton<BooksService>();
         }
     }
 }

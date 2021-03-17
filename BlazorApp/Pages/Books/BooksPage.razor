@@ -1,0 +1,78 @@
+﻿@page "/books"
+
+@using System.Collections.Generic;
+@inject BooksService BooksService
+
+<Title Value="Books"></Title>
+
+<h1>Welcome to books.</h1>
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <p>This razor component demonstrates fetching data from database.</p>
+    </div>
+</div>
+
+@if (books.IsNullOrEmpty())
+{
+    <p><em>No books in the library.</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-8">
+            <table class="table table-striped" id="BooksTable">
+                <thead>
+                    <tr>
+                        <td>No.</td>
+                        <td>Title</td>
+                        <td>Description</td>
+                        <td>Author</td>
+                        <td>Publish date</td>
+                        <td>Is available?</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < books.Count; i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>@books[i].Title</td>
+                            <td>@books[i].Description</td>
+                            <td>@books[i].Author</td>
+                            <td>@books[i].PublishDate</td>
+                            <td>@books[i].IsAvailable</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <!--Empty for now-->
+        </div>
+    </div>
+
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <button type="button" class="btn btn-outline-info float-left">
+            <span class="oi oi-plus"></span> New Book
+        </button>
+    </div>
+</div>
+
+@code {
+    private List<Books> books;
+
+    protected override async Task OnInitializedAsync()
+    {
+        books = await BooksService.GetBooks();
+    }
+
+    public async Task FindBook(int id)
+    {
+        books = new List<Books>();
+        books.Add(await BooksService.FindBook(id));
+    }
+}

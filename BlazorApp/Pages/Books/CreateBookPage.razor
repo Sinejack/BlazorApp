@@ -1,0 +1,19 @@
+﻿@page "/books/create";
+
+@inject BooksService BooksService;
+
+<Title Value="Add new book"></Title>
+<h1>Add a new book</h1>
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <p>This razor component demonstrates how to create and save a model object (book) into the database.</p>
+    </div>
+</div>
+
+@code {
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+}
