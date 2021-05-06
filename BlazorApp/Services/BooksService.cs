@@ -1,5 +1,6 @@
 ﻿using BlazorApp.Models;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace BlazorApp.Services
@@ -12,17 +13,20 @@ namespace BlazorApp.Services
         /// Create a new book.
         /// </summary>
         /// <param name="input"></param>
-        public void CreateBook(string input)
+        public void CreateBook(Book book)
         {
+            Debug.WriteLine("Successfully entered function");
         }
 
         /// <summary>
         /// Get all books.
         /// </summary>
         /// <returns>All books.</returns>
-        public async Task<List<Books>> GetBooks()
+        public async Task<List<Book>> GetBooks()
         {
-            return await Task.FromResult(new List<Books>());
+            
+
+            return await Task.FromResult(new List<Book>());
         }
 
         /// <summary>
@@ -30,9 +34,9 @@ namespace BlazorApp.Services
         /// </summary>
         /// <param name="id">The book ID to look for.</param>
         /// <returns>The associated book.</returns>
-        public async Task<Books> FindBook(int id)
+        public async Task<Book> FindBook(int id)
         {
-            return new Books();
+            return new Book();
         }
 
         /// <summary>

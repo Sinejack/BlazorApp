@@ -1,19 +1,124 @@
 ﻿@page "/books/create";
 
+@using Newtonsoft.Json;
+@using Newtonsoft.Json.Serialization;
+@using System.ComponentModel.DataAnnotations;
+@using BlazorApp;
+
+@inject IJSRuntime JS;
 @inject BooksService BooksService;
 
 <Title Value="Add new book"></Title>
+
+<button class="btn btn-outline-secondary" @onclick="() => Back()">Back</button>
+
 <h1>Add a new book</h1>
 
 <div class="row mb-3">
     <div class="col-md-12">
-        <p>This razor component demonstrates how to create and save a model object (book) into the database.</p>
+        <p>This razor component will demonstrate how to create and save a model data (book) into the database.</p>
     </div>
 </div>
 
+<h4>Enter new book information</h4>
+<EditForm Model="@newBook" OnValidSubmit="@(() => ValidateForm())">
+    <DataAnnotationsValidator />
+
+    <div class="row">
+        <div class="col-md-3 form-group">
+            <label for="NewBookTitle">Title: </label>
+            <InputText id="NewBookTitle" @bind-Value="newBook.Title" class="form-control"></InputText>
+            <ValidationMessage For="() => newBook.Title" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 form-group">
+            <label for="NewBookDescription">Description: </label>
+            <InputText id="NewBookDescription" @bind-Value="newBook.Description" class="form-control"></InputText>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 form-group">
+            <label for="NewBookAuthor">Author: </label>
+            <InputText id="NewBookAuthor" @bind-Value="newBook.Author" class="form-control"></InputText>
+            <ValidationMessage For="() => newBook.Author" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 form-group">
+            <label for="NewBookPublishDate">Publish date: </label>
+            <InputDate id="NewBookPublishDate" @bind-Value="newBook.PublishDate" class="form-control"></InputDate>
+            <ValidationMessage For="() => newBook.PublishDate" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label for="NewBookIsAvailable">Is available? </label> <br />
+            @foreach (var availability in new[] { true, false })
+            {
+                <input name="availability" type="radio" value="@availability"
+                       checked="@(newBook.IsAvailable == availability)" @onchange="(()=> selectedAvailability = availability)" />
+                <label>@availability.ToYesNoString()&nbsp;</label>
+            }
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+    <div class="row mb-3">
+        <p>@submitResult</p>
+    </div>
+</EditForm>
+
+<div>
+    <span id="modelJson"></span>
+</div>
+
 @code {
+
+    private Book newBook = new Book();
+    private bool selectedAvailability;
+    private string submitResult;
+
     protected override Task OnInitializedAsync()
     {
         return base.OnInitializedAsync();
     }
+
+    private async Task Back()
+    {
+        await JS.InvokeVoidAsync("goBack", null);
+    }
+
+    private bool ValidateForm()
+
+    {
+        newBook.IsAvailable = selectedAvailability;
+
+        submitResult = JsonConvert.SerializeObject(newBook);
+
+        return true;
+    }
+
+    private async Task CreateNewBook()
+    {
+
+        if (ValidateForm())
+        {
+            BooksService.CreateBook(newBook);
+        }
+        await JS.InvokeVoidAsync("setElementTextById", "resultJson");
+    }
+
+    private string GetYesNoString(bool value)
+    {
+        return value ? "Yes" : "No";
+    }
+
+    public enum Availability
+    {
+        No = 0,
+        Yes = 1
+    };
+
 }

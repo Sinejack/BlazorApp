@@ -10,28 +10,6 @@ namespace BlazorApp.EntityFramework
         {
         }
 
-        #region Models
-
-        public DbSet<Books> Books { get; set; }
-
-        #endregion Models
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            // Seed data (for testing purpose)
-
-            SeedData(modelBuilder);
-        }
-
-        /// <summary>
-        /// Function to seed data for testing purpose.
-        /// </summary>
-        /// <param name="modelBuilder">Model builder.</param>
-        private void SeedData(ModelBuilder modelBuilder)
-        {
-
-        }
+       
     }
 }

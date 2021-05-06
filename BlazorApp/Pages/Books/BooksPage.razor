@@ -9,7 +9,13 @@
 
 <div class="row mb-3">
     <div class="col-md-12">
-        <p>This razor component demonstrates fetching data from database.</p>
+        <p>This section will teach you how to: </p>
+        <ul>
+            <li>Create a model and save into database</li>
+            <li>Fetch model data from the database</li>
+            <li>Update a model data and save into database</li>
+            <li>Delete a model data from database</li>
+        </ul>
     </div>
 </div>
 
@@ -56,14 +62,19 @@ else
 
 <div class="row">
     <div class="col-md-12">
-        <button type="button" class="btn btn-outline-info float-left">
+        <a class="btn btn-outline-info float-left" href="books/create">
             <span class="oi oi-plus"></span> New Book
-        </button>
+        </a>
+
+
+        @*<button type="button" class="btn btn-outline-info float-left">
+            <span class="oi oi-plus"></span> 
+        </button>*@
     </div>
 </div>
 
 @code {
-    private List<Books> books;
+    private List<Book> books;
 
     protected override async Task OnInitializedAsync()
     {
@@ -72,7 +83,7 @@ else
 
     public async Task FindBook(int id)
     {
-        books = new List<Books>();
+        books = new List<Book>();
         books.Add(await BooksService.FindBook(id));
     }
 }
