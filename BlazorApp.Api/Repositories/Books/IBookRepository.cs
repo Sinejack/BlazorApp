@@ -6,14 +6,16 @@ namespace BlazorApp.Api.Repositories.Books
 {
     public interface IBookRepository
     {
-        Task<IEnumerable<Book>> GetBooks();
+        Task<List<Book>> GetBooks();
 
         Task<Book> GetBook(int bookId);
+
+        Task<Book> GetBookByTitle(string title);
 
         Task<Book> AddBook(Book book);
 
         Task<Book> UpdateBook(Book book);
 
-        Task DeleteBook(int bookId);
+        Task<Book> DeleteBook(int bookId);
     }
 }

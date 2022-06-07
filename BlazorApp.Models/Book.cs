@@ -36,7 +36,6 @@ namespace BlazorApp.Models
         /// <summary>
         /// Is the book available for sale?
         /// </summary>
-
         public bool IsAvailable { get; set; }
 
         public Book()

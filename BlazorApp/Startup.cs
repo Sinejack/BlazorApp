@@ -28,8 +28,8 @@ namespace BlazorApp
             services.AddControllers();
 
             // Add database context
-            services.AddDbContext<AppDbContext>(options
-                => options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
+            //services.AddDbContext<AppDbContext>(options
+            //    => options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
 
             SetupAppServices(services);
         }

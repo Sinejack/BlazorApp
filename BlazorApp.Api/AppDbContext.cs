@@ -15,6 +15,8 @@ namespace BlazorApp.Api
 
         public DbSet<Book> Books { get; set; }
 
+        public DbSet<Bookshelf> Bookshelves { get; set; }
+
         #endregion Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -36,7 +38,7 @@ namespace BlazorApp.Api
         /// <param name="modelBuilder">Model builder.</param>
         private void SeedData(ModelBuilder modelBuilder)
         {
-            var book1 = new Book
+            var book = new Book
             {
                 Id = 1,
                 Author = "Janice Fools",
@@ -46,7 +48,19 @@ namespace BlazorApp.Api
                 IsAvailable = true
             };
 
-            modelBuilder.Entity<Book>().HasData(book1);
+            var bookshelf = new Bookshelf
+            {
+                Id = 1,
+                Code = "A1",
+                Condition = "Few scratches on the left board",
+                Manufacturer = null,
+                Length = 250,
+                Width = 50,
+                Height = 300
+            };
+
+            modelBuilder.Entity<Book>().HasData(book);
+            modelBuilder.Entity<Bookshelf>().HasData(bookshelf);
         }
     }
 }

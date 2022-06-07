@@ -21,14 +21,16 @@ namespace BlazorApp.Api.Repositories.Books
             return result.Entity;
         }
 
-        public async Task DeleteBook(int bookId)
+        public async Task<Book> DeleteBook(int bookId)
         {
             var result = await GetBook(bookId);
             if (result != null)
             {
                 appDbContext.Books.Remove(result);
                 await appDbContext.SaveChangesAsync();
+                return result;
             }
+            return null;
         }
 
         public async Task<Book> GetBook(int bookId)
@@ -36,7 +38,12 @@ namespace BlazorApp.Api.Repositories.Books
             return await appDbContext.Books.FirstOrDefaultAsync(x => x.Id == bookId);
         }
 
-        public async Task<IEnumerable<Book>> GetBooks()
+        public async Task<Book> GetBookByTitle(string title)
+        {
+            return await appDbContext.Books.FirstOrDefaultAsync(x => x.Title == title);
+        }
+
+        public async Task<List<Book>> GetBooks()
         {
             return await appDbContext.Books.ToListAsync();
         }

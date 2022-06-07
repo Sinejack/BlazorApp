@@ -13,7 +13,7 @@ namespace BlazorApp
         /// <returns>True if list is empty; otherwise false.</returns>
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
         {
-            if (enumerable == null) 
+            if (enumerable == null)
                 return true;
 
             if (enumerable is ICollection<T> collection)

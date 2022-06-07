@@ -1,4 +1,5 @@
 using BlazorApp.Api.Repositories.Books;
+using BlazorApp.Api.Repositories.Bookshelves;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,8 +31,9 @@ namespace BlazorApp.Api
         {
             // Repository related
 
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
             services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IBookshelfRepository, BookshelfRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

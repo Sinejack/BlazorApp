@@ -1,21 +1,42 @@
 ﻿using BlazorApp.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Net.Http;
 using System.Threading.Tasks;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace BlazorApp.Services
 {
     public class BooksService
     {
+        private readonly Uri BaseAddress = new Uri("https://localhost:44317/");
+
         #region CRUD
 
         /// <summary>
         /// Create a new book.
         /// </summary>
         /// <param name="input"></param>
-        public void CreateBook(Book book)
+        public async Task<Book> CreateBook(Book book)
         {
-            Debug.WriteLine("Successfully entered function");
+            var jsonContent = JsonConvert.SerializeObject(book);
+            var stringContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            using var client = new HttpClient();
+
+            client.BaseAddress = BaseAddress;
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var response = await client.PostAsync("api/Books", stringContent);
+            if (response.IsSuccessStatusCode)
+            {
+                var repliedContent = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<Book>(repliedContent);
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -24,9 +45,24 @@ namespace BlazorApp.Services
         /// <returns>All books.</returns>
         public async Task<List<Book>> GetBooks()
         {
-            
+            // Get book from rest API
 
-            return await Task.FromResult(new List<Book>());
+            var books = new List<Book>();
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = BaseAddress;
+                client.DefaultRequestHeaders.Accept.Clear();
+
+                var response = await client.GetAsync("api/Books");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    books = JsonConvert.DeserializeObject<List<Book>>(content);
+                }
+            }
+
+            return books;
         }
 
         /// <summary>
@@ -42,8 +78,10 @@ namespace BlazorApp.Services
         /// <summary>
         /// Update a book.
         /// </summary>
-        public void UpdateBook()
+        public async Task<Book> UpdateBook(int id, Book book)
         {
+
+            return new Book();
         }
 
         /// <summary>

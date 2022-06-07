@@ -21,7 +21,7 @@
 </div>
 
 <h4>Enter new book information</h4>
-<EditForm Model="@newBook" OnValidSubmit="@(() => ValidateForm())">
+<EditForm Model="@newBook" OnValidSubmit="@(() => CreateNewBook())">
     <DataAnnotationsValidator />
 
     <div class="row">
@@ -66,7 +66,16 @@
     <button type="submit" class="btn btn-primary">Submit</button>
 
     <div class="row mb-3">
-        <p>@submitResult</p>
+        <div class="col-md-12">
+            @if (submitResult is not null)
+            {
+                <p>Book created with content: @submitResult</p>
+            }
+            else
+            {
+                <p>There was a problem when creating the book. Please check exception stacktrace or run in debug mode (origin: BookService.CreateBook()).</p>
+            }
+        </div>
     </div>
 </EditForm>
 
@@ -105,9 +114,9 @@
 
         if (ValidateForm())
         {
-            BooksService.CreateBook(newBook);
+            var result = await BooksService.CreateBook(newBook);
+            submitResult = JsonConvert.SerializeObject(result);
         }
-        await JS.InvokeVoidAsync("setElementTextById", "resultJson");
     }
 
     private string GetYesNoString(bool value)

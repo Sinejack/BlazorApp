@@ -1,0 +1,75 @@
+﻿@page "/books/update/{id}"
+
+@using Newtonsoft.Json;
+@using Newtonsoft.Json.Serialization;
+@using System.ComponentModel.DataAnnotations;
+@using BlazorApp;
+
+@inject BooksService BooksService
+@inject IJSRuntime JS;
+
+<Title Value="Update book"></Title>
+<button class="btn btn-outline-secondary" @onclick="() => Back()">Back</button>
+
+<h1>Update a book</h1>
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <p>This razor component will demonstrate how to update a model data (book) and save into the database.</p>
+    </div>
+</div>
+
+<h4>Current book information</h4>
+
+<EditForm Model="@bookToUpdate" OnValidSubmit="@(()=>UpdateBook(bookToUpdate.Id, bookToUpdate))">
+    <DataAnnotationsValidator />
+
+    <div class="row">
+        <div class="col-md-3 form-group">
+            <label for="CurrentBookId">Id: </label>
+            <InputNumber id="CurrentBookId" @bind-Value="bookToUpdate.Id" class="form-control" disabled></InputNumber>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3 form-group">
+            <label for="CurrentBookTitle">Title: </label>
+        </div>
+
+    </div>
+
+</EditForm>
+
+@code{
+    private Book bookToUpdate;
+    private bool selectedAvailability;
+    private List<Book> books;
+
+    private async Task Back()
+    {
+        await JS.InvokeVoidAsync("goBack", null);
+    }
+
+    private bool ValidateForm()
+    {
+        bookToUpdate.IsAvailable = selectedAvailability;
+
+        return true;
+    }
+
+    public async Task FindBook(int id)
+    {
+        books = new List<Book>();
+        books.Add(await BooksService.FindBook(id));
+
+    }
+
+    private async Task UpdateBook(int id, Book book)
+    {
+        if (ValidateForm())
+        {
+            var result = await BooksService.UpdateBook(id, book);
+        }
+    }
+
+}

@@ -19,9 +19,21 @@
     </div>
 </div>
 
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <p>This part shows how to fetch books via REST API.</p>
+        <ol>
+            <li>The API host must be reachable. Ensure that the API host (in this example, localhost:44317) is available.</li>
+            <li>Create a service class call BookService. The class is responsible to prepare the URI link and send it to the API host using REST API.</li>
+            <li>Populate the list upon successful retrieval of books.</li>
+        </ol>
+    </div>
+</div>
+
 @if (books.IsNullOrEmpty())
 {
-    <p><em>No books in the library.</em></p>
+    <p><em>No books in the library currently or host endpoint is unreachable.</em></p>
 }
 else
 {
@@ -36,6 +48,7 @@ else
                         <td>Author</td>
                         <td>Publish date</td>
                         <td>Is available?</td>
+                        <td></td> <!--to put update icon-->
                     </tr>
                 </thead>
                 <tbody>
@@ -48,6 +61,7 @@ else
                             <td>@books[i].Author</td>
                             <td>@books[i].PublishDate</td>
                             <td>@books[i].IsAvailable</td>
+                            <td></td> <!-- To put update icon -->
                         </tr>
                     }
                 </tbody>
@@ -66,7 +80,6 @@ else
             <span class="oi oi-plus"></span> New Book
         </a>
 
-
         @*<button type="button" class="btn btn-outline-info float-left">
             <span class="oi oi-plus"></span> 
         </button>*@
@@ -79,11 +92,5 @@ else
     protected override async Task OnInitializedAsync()
     {
         books = await BooksService.GetBooks();
-    }
-
-    public async Task FindBook(int id)
-    {
-        books = new List<Book>();
-        books.Add(await BooksService.FindBook(id));
     }
 }
